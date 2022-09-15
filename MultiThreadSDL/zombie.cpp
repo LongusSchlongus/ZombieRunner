@@ -1,9 +1,9 @@
-#include "Player.h"
+#include "Zombie.h"
 #include <SDL_image.h>
 #include <iostream>
 #include <cmath>
 
-Player::Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
+Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
@@ -58,12 +58,12 @@ Player::Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, i
 	moveSpeed = 200.0f;
 }
 
-Player::~Player()
+Zombie::~Zombie()
 {
 	SDL_DestroyTexture(texture);
 }
 
-void Player::Update(float delta, const Uint8* keyState)
+void Zombie::Update(float delta, const Uint8* keyState)
 {
 	isActive = true;
 	if (keyState[keys[0]])
@@ -108,20 +108,20 @@ void Player::Update(float delta, const Uint8* keyState)
 	}
 }
 
-void Player::Draw(SDL_Renderer* renderTarget)
+void Zombie::Draw(SDL_Renderer* renderTarget)
 {
 	SDL_RenderCopy(renderTarget, texture, &cropRect, &positionRect);
 }
 
-bool Player::intersectsWith(Bomb& p)
+bool Zombie::intersectsWith(Bomb& p)
 {
-	if (sqrt(pow(GetOriginX() - p.GetOriginX(), 2) + pow(GetOriginY() - p.GetOriginY(), 2)) >= radius + p.GetRadius() )
+	if (sqrt(pow(GetOriginX() - p.GetOriginX(), 2) + pow(GetOriginY() - p.GetOriginY(), 2)) >= radius + p.GetRadius())
 	{
 		return false;
 	}
 	return true;
 }
 
-int Player::GetOriginX() { return positionRect.x + originX; }
-int Player::GetOriginY() { return positionRect.y + originY; }
-int Player::GetRadius() { return radius; }
+int Zombie::GetOriginX() { return positionRect.x + originX; }
+int Zombie::GetOriginY() { return positionRect.y + originY; }
+int Zombie::GetRadius() { return radius; }

@@ -19,9 +19,7 @@ private:
 	int originX, originY;
 	int radius;
 	int bombCounter;
-
-	int id;
-	char name[30];
+	bool isExploded;
 
 public:
 	//Default constructor
@@ -46,6 +44,10 @@ public:
 	int GetOriginY();
 	int GetRadius();
 
-	void Spawn(int posX, int posY);
+	void toggleBomb(bool value);
+	void setCords(int x, int y);
+	bool getActive();
+	bool getExploded();
+	void setExploded(bool value);
 };
 

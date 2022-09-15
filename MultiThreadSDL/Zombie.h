@@ -1,9 +1,9 @@
-#pragma once	
+#pragma once
 
 #include <SDL.h>
 #include <string>
 
-#include "Bomb.h"
+#include "Zombie.h"
 
 
 class Player
@@ -26,7 +26,7 @@ public:
 	~Player();
 
 	void Update(float delta, const Uint8* keyState);
-	void Draw(SDL_Renderer* renderTarget);  
+	void Draw(SDL_Renderer* renderTarget);
 	bool intersectsWith(Bomb& b);
 
 	SDL_Rect positionRect;

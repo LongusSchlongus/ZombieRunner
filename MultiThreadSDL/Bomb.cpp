@@ -5,7 +5,8 @@
 
 Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
-	isActive = false;
+	isExploded = false;
+	std::cout << "Creation of new bmb: " << std::endl;
 
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
@@ -32,32 +33,11 @@ Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int f
 	frameWidth = positionRect.w = cropRect.w;
 	frameHeight = positionRect.h = cropRect.h;
 
+
 	originX = frameWidth / 2;
 	originY = frameHeight / 2;
 
 	radius = frameWidth / 2;
-
-	isActive = false;
-
-	static int playerNumber = 0;
-	playerNumber++;
-
-	if (playerNumber == 1)
-	{
-		keys[0] = SDL_SCANCODE_W;
-		keys[1] = SDL_SCANCODE_S;
-		keys[2] = SDL_SCANCODE_A;
-		keys[3] = SDL_SCANCODE_D;
-	}
-	else
-	{
-		keys[0] = SDL_SCANCODE_UP;
-		keys[1] = SDL_SCANCODE_DOWN;
-		keys[2] = SDL_SCANCODE_LEFT;
-		keys[3] = SDL_SCANCODE_RIGHT;
-
-	}
-	moveSpeed = 200.0f;
 }
 
 Bomb::~Bomb()
@@ -67,9 +47,10 @@ Bomb::~Bomb()
 
 void Bomb::Update(float delta)
 {
+
 	if (isActive)
 	{
-		SDL_SetTextureColorMod(texture, rand()%255, rand() % 255, rand() % 255);
+		SDL_SetTextureColorMod(texture, rand() % 255, rand() % 255, rand() % 255);
 		frameCounter += delta;
 
 		if (frameCounter >= 0.25f)
@@ -79,7 +60,7 @@ void Bomb::Update(float delta)
 			if (cropRect.x >= textureWidth)
 				cropRect.x = 0;
 			bombCounter++;
-			
+
 		}
 	}
 
@@ -87,7 +68,9 @@ void Bomb::Update(float delta)
 	{
 		std::cout << "Explosion!!" << std::endl;
 		isActive = false;
+		isExploded = true;
 		frameCounter = 0;
+		bombCounter = 0;
 		cropRect.x = frameWidth;
 	}
 }
@@ -104,14 +87,24 @@ int Bomb::GetOriginY() { return positionRect.y + originY; }
 
 int Bomb::GetRadius() { return radius; }
 
-void Bomb::Spawn(int posX, int posY)
+void Bomb::toggleBomb(bool value)
 {
-    positionRect.x = posX;
-	positionRect.y = posY;
-
-	isActive = true;
+	isActive = value;
 }
 
+void Bomb::setCords(int x, int y)
+{
+	positionRect.x = x;
+	positionRect.y = y;
 
+}
+bool Bomb::getActive() { return isActive; }
+
+bool Bomb::getExploded() { return isExploded; }
+
+void Bomb::setExploded(bool value)
+{
+	isExploded = value;
+}
 
 

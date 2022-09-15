@@ -24,12 +24,18 @@
     <ClCompile Include="Bomb.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="zombie.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Bomb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
