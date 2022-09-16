@@ -4,9 +4,10 @@
 #include <string>
 
 #include "Zombie.h"
+#include "Bomb.h"
 
 
-class Player
+class Zombie
 {
 private:
 	SDL_Rect cropRect;
@@ -22,8 +23,8 @@ private:
 	int radius;
 
 public:
-	Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
-	~Player();
+	Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
+	~Zombie();
 
 	void Update(float delta, const Uint8* keyState);
 	void Draw(SDL_Renderer* renderTarget);

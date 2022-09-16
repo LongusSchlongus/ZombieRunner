@@ -5,8 +5,6 @@
 
 Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
-	isExploded = false;
-	std::cout << "Creation of new bmb: " << std::endl;
 
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
@@ -50,8 +48,10 @@ void Bomb::Update(float delta)
 
 	if (isActive)
 	{
-		SDL_SetTextureColorMod(texture, rand() % 255, rand() % 255, rand() % 255);
+		SDL_SetTextureColorMod(texture, 255, 255, 255);
+
 		frameCounter += delta;
+		bombCounter += delta;
 
 		if (frameCounter >= 0.25f)
 		{
@@ -59,20 +59,28 @@ void Bomb::Update(float delta)
 			cropRect.x += frameWidth;
 			if (cropRect.x >= textureWidth)
 				cropRect.x = 0;
-			bombCounter++;
+		}
 
+		if (bombCounter >= 1.0f)
+		{
+			bombCounter = 0;
+			toggleBomb(true);
+			std::cout << "Explosion!!" << std::endl;
+			isActive = false;
+			isExploded = true;
 		}
 	}
 
+	/*
 	if (bombCounter >= 15 && isActive == true)
 	{
-		std::cout << "Explosion!!" << std::endl;
-		isActive = false;
-		isExploded = true;
+		
 		frameCounter = 0;
 		bombCounter = 0;
-		cropRect.x = frameWidth;
+		//cropRect.x = frameWidth;
 	}
+	*/
+	
 }
 
 void Bomb::Draw(SDL_Renderer* renderTarget)
@@ -106,5 +114,7 @@ void Bomb::setExploded(bool value)
 {
 	isExploded = value;
 }
+
+
 
 

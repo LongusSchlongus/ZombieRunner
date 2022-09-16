@@ -12,27 +12,19 @@ private:
 
 	float moveSpeed;
 	float frameCounter;
+	float bombCounter;
 	float frameWidth, frameHeight;
 	int textureWidth;
 	bool isActive;
 	SDL_Scancode keys[4];
 	int originX, originY;
 	int radius;
-	int bombCounter;
 	bool isExploded;
+	bool isReady;
 
 public:
-	//Default constructor
-	//Bomb();
 
 	Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
-
-	//Copy constructor
-	//Bomb(const Bomb& bomb);
-
-	//Assignment operator
-	//Bomb& operator=(const Bomb& bomb);
-
 	~Bomb();
 
 	void Update(float delta);
@@ -49,5 +41,7 @@ public:
 	bool getActive();
 	bool getExploded();
 	void setExploded(bool value);
+
+	void LoadTexture(SDL_Renderer* renderTarget, std::string filePath);
 };
 
