@@ -5,6 +5,7 @@
 
 Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
+	bool wechel = true;
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
 		std::cout << "Error" << std::endl;
@@ -36,26 +37,7 @@ Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, i
 	radius = frameWidth / 2;
 
 	isActive = false;
-
-	static int playerNumber = 0;
-	playerNumber++;
-
-	if (playerNumber == 1)
-	{
-		keys[0] = SDL_SCANCODE_W;
-		keys[1] = SDL_SCANCODE_S;
-		keys[2] = SDL_SCANCODE_A;
-		keys[3] = SDL_SCANCODE_D;
-	}
-	else
-	{
-		keys[0] = SDL_SCANCODE_UP;
-		keys[1] = SDL_SCANCODE_DOWN;
-		keys[2] = SDL_SCANCODE_LEFT;
-		keys[3] = SDL_SCANCODE_RIGHT;
-
-	}
-	moveSpeed = 200.0f;
+	moveSpeed = 150.0f;
 }
 
 Zombie::~Zombie()
@@ -63,28 +45,25 @@ Zombie::~Zombie()
 	SDL_DestroyTexture(texture);
 }
 
-void Zombie::Update(float delta, const Uint8* keyState)
+void Zombie::Update(float delta, int playerX, int playerY)
 {
 	isActive = true;
-	if (keyState[keys[0]])
-	{
-		positionRect.y -= moveSpeed * delta;
-		cropRect.y = frameHeight * 3;
-	}
-	else if (keyState[keys[1]])
-	{
-		positionRect.y += moveSpeed * delta;
-		cropRect.y = 0;
-	}
-	else if (keyState[keys[2]])
+
+	if (GetOriginX() > playerX)
 	{
 		positionRect.x -= moveSpeed * delta;
-		cropRect.y = frameHeight;
 	}
-	else if (keyState[keys[3]])
+	else if (GetOriginX() < playerX)
 	{
 		positionRect.x += moveSpeed * delta;
-		cropRect.y = frameHeight * 2;
+	}
+	else if (GetOriginY() < playerY)
+	{
+		positionRect.y += moveSpeed * delta;
+	}
+	else if (GetOriginY() > playerY)
+	{
+		positionRect.y -= moveSpeed * delta;
 	}
 	else
 		isActive = false;

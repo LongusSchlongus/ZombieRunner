@@ -5,6 +5,7 @@
 #include <vector>
 #include "player.h"
 #include "Bomb.h"
+#include "Zombie.h"
 
 SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
 {
@@ -45,7 +46,9 @@ int main(int argc, char* argv[])
 	Player player1(renderTarget, "player1.png", 20, 20, 3, 4);
 	Player player2(renderTarget, "player2.png", 600, 400, 3, 4);
 
-	Bomb b(renderTarget, "bomb.png", player1.GetOriginX(), player1.GetOriginY(), 3, 4);
+	Bomb b(renderTarget, "bomb2.png", player1.GetOriginX(), player1.GetOriginY(), 3, 4);
+
+	Zombie zombie(renderTarget, "zombie.png", rand() % 600 + 20, rand() % 400 + 20, 3, 4);
 
 	SDL_Texture* texture = LoadTexture("rect.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
@@ -89,6 +92,7 @@ int main(int argc, char* argv[])
 		player1.Update(delta, keyState);
 		player2.Update(delta, keyState);
 		b.Update(delta);
+		zombie.Update(delta, player1.GetOriginX(), player2.GetOriginY());
 		
 
 		cameraRect.x = player1.GetOriginX() - 320;
@@ -104,10 +108,10 @@ int main(int argc, char* argv[])
 		if (cameraRect.y + cameraRect.h >= levelHeight)
 			cameraRect.y = levelHeight - 480;
 
-		if (player1.intersectsWith(b) && b.getExploded())
+		if (player1.intersectsWith(zombie) && b.getExploded())
 		{
 			b.setExploded(false);
-			std::cout << "Damag taken!" << std::endl;
+			zombie.~Zombie();
 		}
 
 		// Drawing the cuurent image to the window
@@ -117,6 +121,7 @@ int main(int argc, char* argv[])
 		player1.Draw(renderTarget);
 		player2.Draw(renderTarget);
 		b.Draw(renderTarget);
+		zombie.Draw(renderTarget);
 		
 		SDL_RenderPresent(renderTarget);
 	}

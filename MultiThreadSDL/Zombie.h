@@ -26,7 +26,7 @@ public:
 	Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
 	~Zombie();
 
-	void Update(float delta, const Uint8* keyState);
+	void Update(float delta, int playerX, int playerY);
 	void Draw(SDL_Renderer* renderTarget);
 	bool intersectsWith(Bomb& b);
 

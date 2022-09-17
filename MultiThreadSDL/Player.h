@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Bomb.h"
+#include "Zombie.h"
 
 
 class Player
@@ -27,7 +28,7 @@ public:
 
 	void Update(float delta, const Uint8* keyState);
 	void Draw(SDL_Renderer* renderTarget);  
-	bool intersectsWith(Bomb& b);
+	bool intersectsWith(Zombie& z);
 
 	SDL_Rect positionRect;
 

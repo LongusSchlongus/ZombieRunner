@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Zombie.h"
 #include <SDL_image.h>
 #include <iostream>
 #include <cmath>
@@ -113,9 +114,9 @@ void Player::Draw(SDL_Renderer* renderTarget)
 	SDL_RenderCopy(renderTarget, texture, &cropRect, &positionRect);
 }
 
-bool Player::intersectsWith(Bomb& p)
+bool Player::intersectsWith(Zombie& z)
 {
-	if (sqrt(pow(GetOriginX() - p.GetOriginX(), 2) + pow(GetOriginY() - p.GetOriginY(), 2)) >= radius + p.GetRadius() )
+	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= radius + z.GetRadius() )
 	{
 		return false;
 	}

@@ -5,7 +5,6 @@
 
 Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
-
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
 		std::cout << "Error" << std::endl;
@@ -50,6 +49,10 @@ void Bomb::Update(float delta)
 	{
 		SDL_SetTextureColorMod(texture, 255, 255, 255);
 
+		if (bombCounter == 0) {
+			cropRect.y = 0;
+		}
+
 		frameCounter += delta;
 		bombCounter += delta;
 
@@ -61,26 +64,20 @@ void Bomb::Update(float delta)
 				cropRect.x = 0;
 		}
 
-		if (bombCounter >= 1.0f)
+		if (bombCounter >= 1.0f && !isExploded)
 		{
-			bombCounter = 0;
 			toggleBomb(true);
-			std::cout << "Explosion!!" << std::endl;
-			isActive = false;
 			isExploded = true;
+			cropRect.y = frameHeight;
+		}
+
+		if (bombCounter >= 1.5f)
+		{
+			isActive = false;
+			cropRect.y = frameHeight*2;
+			bombCounter = 0;
 		}
 	}
-
-	/*
-	if (bombCounter >= 15 && isActive == true)
-	{
-		
-		frameCounter = 0;
-		bombCounter = 0;
-		//cropRect.x = frameWidth;
-	}
-	*/
-	
 }
 
 void Bomb::Draw(SDL_Renderer* renderTarget)
