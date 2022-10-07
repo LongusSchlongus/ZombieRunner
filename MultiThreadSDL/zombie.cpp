@@ -1,11 +1,15 @@
 #include "Zombie.h"
+#include "Player.h"
+
 #include <SDL_image.h>
 #include <iostream>
 #include <cmath>
 
 Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
-	bool wechel = true;
+	isAlive = true;
+	frameCounter = 0;
+
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
 		std::cout << "Error" << std::endl;
@@ -37,7 +41,7 @@ Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, i
 	radius = frameWidth / 2;
 
 	isActive = false;
-	moveSpeed = 150.0f;
+	moveSpeed = 25.0f;
 }
 
 Zombie::~Zombie()
@@ -45,28 +49,42 @@ Zombie::~Zombie()
 	SDL_DestroyTexture(texture);
 }
 
-void Zombie::Update(float delta, int playerX, int playerY)
+void Zombie::Update(float delta, int zombieX, int zombieY, int playerX, int playerY, bool explosion, Bomb& b)
 {
 	isActive = true;
+	
+	if (isAlive)
+	{
+		if (zombieX < playerX)
+		{
+			positionRect.x += moveSpeed * delta;
+			std::cout << "right" << std::endl;
+		}
+		else if (zombieX > playerX)
+		{
+			positionRect.x -= moveSpeed * delta;
+			std::cout << "left" << std::endl;
+		}
 
-	if (GetOriginX() > playerX)
-	{
-		positionRect.x -= moveSpeed * delta;
+		if (zombieY > playerY)
+		{
+			positionRect.y -= moveSpeed * delta;
+			std::cout << "up" << std::endl;
+		}
+		else if (zombieY < playerY)
+		{
+			positionRect.y += moveSpeed * delta;
+			std::cout << "down" << std::endl;
+		}
 	}
-	else if (GetOriginX() < playerX)
+
+	if (explosion && intersectsWith(b))
 	{
-		positionRect.x += moveSpeed * delta;
+		std::cout << "hit" << std::endl;
+		isAlive = false;
+		positionRect.x = -200.0f;
+		positionRect.y = -200.0f;
 	}
-	else if (GetOriginY() < playerY)
-	{
-		positionRect.y += moveSpeed * delta;
-	}
-	else if (GetOriginY() > playerY)
-	{
-		positionRect.y -= moveSpeed * delta;
-	}
-	else
-		isActive = false;
 
 	if (isActive)
 	{
@@ -89,7 +107,14 @@ void Zombie::Update(float delta, int playerX, int playerY)
 
 void Zombie::Draw(SDL_Renderer* renderTarget)
 {
-	SDL_RenderCopy(renderTarget, texture, &cropRect, &positionRect);
+	SDL_Rect test;
+	test.x = positionRect.x;
+	test.w = positionRect.w;
+	test.h = positionRect.h;
+	test.y = positionRect.y;
+
+
+	SDL_RenderCopy(renderTarget, texture, &cropRect, &test);
 }
 
 bool Zombie::intersectsWith(Bomb& p)

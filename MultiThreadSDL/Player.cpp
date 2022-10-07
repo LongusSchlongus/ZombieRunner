@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Zombie.h"
+
 #include <SDL_image.h>
 #include <iostream>
 #include <cmath>
@@ -19,6 +20,8 @@ Player::Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, i
 	SDL_FreeSurface(surface);
 
 	SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
+
+	frameCounter = 0;
 
 	positionRect.x = x;
 	positionRect.y = y;
@@ -114,14 +117,16 @@ void Player::Draw(SDL_Renderer* renderTarget)
 	SDL_RenderCopy(renderTarget, texture, &cropRect, &positionRect);
 }
 
+/*
 bool Player::intersectsWith(Zombie& z)
 {
-	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= radius + z.GetRadius() )
+	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= GetRadius() + z.GetRadius() )
 	{
 		return false;
 	}
 	return true;
 }
+*/
 
 int Player::GetOriginX() { return positionRect.x + originX; }
 int Player::GetOriginY() { return positionRect.y + originY; }

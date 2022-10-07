@@ -28,7 +28,7 @@ public:
 
 	void Update(float delta, const Uint8* keyState);
 	void Draw(SDL_Renderer* renderTarget);  
-	bool intersectsWith(Zombie& z);
+	//bool intersectsWith(Zombie& z);
 
 	SDL_Rect positionRect;
 

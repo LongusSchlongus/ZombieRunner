@@ -10,17 +10,15 @@ private:
 	SDL_Rect cropRect;
 	SDL_Texture* texture;
 
-	float moveSpeed;
 	float frameCounter;
-	float bombCounter;
+	int periodCounter;
 	float frameWidth, frameHeight;
 	int textureWidth;
 	bool isActive;
-	SDL_Scancode keys[4];
 	int originX, originY;
 	int radius;
-	bool isExploded;
-	bool isReady;
+
+	bool explosion;
 
 public:
 
@@ -36,12 +34,8 @@ public:
 	int GetOriginY();
 	int GetRadius();
 
-	void toggleBomb(bool value);
-	void setCords(int x, int y);
-	bool getActive();
-	bool getExploded();
-	void setExploded(bool value);
-
-	void LoadTexture(SDL_Renderer* renderTarget, std::string filePath);
+	void toggleBomb(int x, int y);
+	void resetBomb();
+	bool getExplosion();
 };
 

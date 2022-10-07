@@ -1,10 +1,16 @@
 #include "Bomb.h"
+
 #include <SDL_image.h>
 #include <iostream>
 #include <cmath>
 
 Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
+	explosion = false;
+	frameCounter = 0;
+	isActive = false;
+	periodCounter = 0;
+
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
 		std::cout << "Error" << std::endl;
@@ -44,38 +50,35 @@ Bomb::~Bomb()
 
 void Bomb::Update(float delta)
 {
-
 	if (isActive)
 	{
-		SDL_SetTextureColorMod(texture, 255, 255, 255);
-
-		if (bombCounter == 0) {
-			cropRect.y = 0;
-		}
-
 		frameCounter += delta;
-		bombCounter += delta;
-
 		if (frameCounter >= 0.25f)
 		{
+			periodCounter++;
+
 			frameCounter = 0;
+
 			cropRect.x += frameWidth;
 			if (cropRect.x >= textureWidth)
 				cropRect.x = 0;
+
 		}
 
-		if (bombCounter >= 1.0f && !isExploded)
+		if (periodCounter >= 0 && periodCounter < 4)
 		{
-			toggleBomb(true);
-			isExploded = true;
-			cropRect.y = frameHeight;
+			cropRect.y = 0;
+			explosion = false;
 		}
-
-		if (bombCounter >= 1.5f)
+		else if (periodCounter >= 4 && periodCounter < 8)
 		{
-			isActive = false;
-			cropRect.y = frameHeight*2;
-			bombCounter = 0;
+			cropRect.y = frameWidth;
+			explosion = true;
+		}
+		else if (periodCounter >= 8)
+		{
+			resetBomb();
+			explosion = false;
 		}
 	}
 }
@@ -92,25 +95,20 @@ int Bomb::GetOriginY() { return positionRect.y + originY; }
 
 int Bomb::GetRadius() { return radius; }
 
-void Bomb::toggleBomb(bool value)
-{
-	isActive = value;
-}
-
-void Bomb::setCords(int x, int y)
+void Bomb::toggleBomb(int x, int y)
 {
 	positionRect.x = x;
 	positionRect.y = y;
-
+	isActive = true;
 }
-bool Bomb::getActive() { return isActive; }
-
-bool Bomb::getExploded() { return isExploded; }
-
-void Bomb::setExploded(bool value)
+void Bomb::resetBomb()
 {
-	isExploded = value;
+	positionRect.x = -200;
+	positionRect.y = 200;
+	isActive = false;
+	periodCounter = 0;
 }
+bool Bomb::getExplosion() { return explosion; }
 
 
 

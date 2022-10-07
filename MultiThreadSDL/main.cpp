@@ -1,11 +1,16 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_thread.h>
-#include <iostream>
-#include <vector>
 #include "player.h"
 #include "Bomb.h"
 #include "Zombie.h"
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_thread.h>
+#include <SDL_ttf.h>
+
+#include <iostream>
+#include <vector>
+#include <string>
+
 
 SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
 {
@@ -27,7 +32,7 @@ SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
 
 int main(int argc, char* argv[])
 {
-	// Initiallaizing and loading variables
+	// --------------------------------------------------- Initiallaizing and loading variables
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderTarget = nullptr;
 	int currentTime = 0;
@@ -46,11 +51,17 @@ int main(int argc, char* argv[])
 	Player player1(renderTarget, "player1.png", 20, 20, 3, 4);
 	Player player2(renderTarget, "player2.png", 600, 400, 3, 4);
 
-	Bomb b(renderTarget, "bomb2.png", player1.GetOriginX(), player1.GetOriginY(), 3, 4);
+	Bomb b(renderTarget, "bomb2.png", -200, 200, 3, 4);
 
-	Zombie zombie(renderTarget, "zombie.png", rand() % 600 + 20, rand() % 400 + 20, 3, 4);
+	Zombie z1(renderTarget, "zombie.png", rand() % 600 + 20, rand() % 400 + 20, 3, 4);
+	Zombie z2(renderTarget, "zombie.png", 200, 200, 3, 4);
+	std::vector<Zombie> vector_zombies;
 
-	SDL_Texture* texture = LoadTexture("rect.png", renderTarget);
+	Zombie zombie(renderTarget, "zombie.png", rand() % 600, rand() % 400, 3, 4);
+
+	//Zombie zombies[2] = { vector_zombies.at(0), vector_zombies.at(1) };
+
+	SDL_Texture* texture = LoadTexture("rect2.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
 	
 	bool isRunning = true;
@@ -65,20 +76,16 @@ int main(int argc, char* argv[])
 		delta = (currentTime - prevTime) / 1000.0f;
 		while (SDL_PollEvent(&ev) != 0)
 		{
-			// Getting the quit and keyboard events
+			// --------------------------------------------------- Getting the quit and keyboard events
 			if (ev.type == SDL_QUIT)
 				isRunning = false;
 			else if (ev.type == SDL_KEYDOWN) {
 				switch (ev.key.keysym.sym)
 				{
 				case SDLK_SPACE:
-					if (true)
-					{
-						b.setCords(player1.GetOriginX(), player1.GetOriginY()); // check if bomb is ready or in use
-						b.toggleBomb(true);
-					}
+					b.toggleBomb(player1.GetOriginX(), player1.GetOriginY());
 					break;
-				case SDLK_t:
+				case SDLK_r:
 					break;
 				default:
 					break;
@@ -92,7 +99,8 @@ int main(int argc, char* argv[])
 		player1.Update(delta, keyState);
 		player2.Update(delta, keyState);
 		b.Update(delta);
-		zombie.Update(delta, player1.GetOriginX(), player2.GetOriginY());
+		zombie.Update(delta, zombie.GetOriginX(), zombie.GetOriginY(), player1.GetOriginX(), player1.GetOriginY(), b.getExplosion(), b);
+		
 		
 
 		cameraRect.x = player1.GetOriginX() - 320;
@@ -107,14 +115,8 @@ int main(int argc, char* argv[])
 			cameraRect.x = levelWidth - 640;
 		if (cameraRect.y + cameraRect.h >= levelHeight)
 			cameraRect.y = levelHeight - 480;
-
-		if (player1.intersectsWith(zombie) && b.getExploded())
-		{
-			b.setExploded(false);
-			zombie.~Zombie();
-		}
-
-		// Drawing the cuurent image to the window
+		
+		// --------------------------------------------------- Drawing the cuurent image to the window
 		SDL_RenderClear(renderTarget);
 		SDL_RenderCopy(renderTarget, texture, &cameraRect, NULL);
 
@@ -125,7 +127,8 @@ int main(int argc, char* argv[])
 		
 		SDL_RenderPresent(renderTarget);
 	}
-	// Freeing the memory
+
+	// --------------------------------------------------- Freeing the memory
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderTarget);
 	SDL_DestroyTexture(texture);

@@ -3,7 +3,6 @@
 #include <SDL.h>
 #include <string>
 
-#include "Zombie.h"
 #include "Bomb.h"
 
 
@@ -18,19 +17,18 @@ private:
 	float frameWidth, frameHeight;
 	int textureWidth;
 	bool isActive;
-	SDL_Scancode keys[4];
 	int originX, originY;
 	int radius;
-
+	bool isAlive;
 public:
 	Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
 	~Zombie();
 
-	void Update(float delta, int playerX, int playerY);
+	void Update(float delta, int zombieX, int zombieY, int playerX, int playerY, bool explosion, Bomb& b);
 	void Draw(SDL_Renderer* renderTarget);
 	bool intersectsWith(Bomb& b);
 
-	SDL_Rect positionRect;
+	SDL_FRect positionRect;
 
 	int GetOriginX();
 	int GetOriginY();
