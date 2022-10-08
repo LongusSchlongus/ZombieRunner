@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Bomb.h"
+#include "Player.h"
 
 
 class Zombie
@@ -24,7 +25,7 @@ public:
 	Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
 	~Zombie();
 
-	void Update(float delta, int zombieX, int zombieY, int playerX, int playerY, bool explosion, Bomb& b);
+	void Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b, Bomb& b2);
 	void Draw(SDL_Renderer* renderTarget);
 	bool intersectsWith(Bomb& b);
 

@@ -49,36 +49,74 @@ Zombie::~Zombie()
 	SDL_DestroyTexture(texture);
 }
 
-void Zombie::Update(float delta, int zombieX, int zombieY, int playerX, int playerY, bool explosion, Bomb& b)
+void Zombie::Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b1, Bomb& b2)
 {
+
 	isActive = true;
+
+	int zombieX = this->GetOriginX();
+	int zombieY = this->GetOriginY();
+
+	//c^2 = a^2 + b^2
+	//c = sqrt(pow(a,2) + pow(b,2))
+
+	//kat1 = abs(x2 - x1)
+	//kat2 = abs(y2 - y1)
+
+	// => dist1 = sqrt(pow( abs(x2 - x1) ,2) + pow( abs(y2 - y1) ,2))
 	
+	float dist1 = sqrt(pow(abs(playerX - zombieX), 2) + pow(abs(playerY - zombieY), 2));
+	float dist2 = sqrt(pow(abs(player2X - zombieX), 2) + pow(abs(player2Y - zombieY), 2));
+
 	if (isAlive)
 	{
-		if (zombieX < playerX)
+		if (dist1 <= dist2)
 		{
-			positionRect.x += moveSpeed * delta;
-			std::cout << "right" << std::endl;
-		}
-		else if (zombieX > playerX)
-		{
-			positionRect.x -= moveSpeed * delta;
-			std::cout << "left" << std::endl;
-		}
+			if (zombieX < playerX)
+			{
+				positionRect.x += moveSpeed * delta;
+				//std::cout << "right" << std::endl;
+			}
+			else if (zombieX > playerX)
+			{
+				positionRect.x -= moveSpeed * delta;
+				//std::cout << "left" << std::endl;
+			}
 
-		if (zombieY > playerY)
-		{
-			positionRect.y -= moveSpeed * delta;
-			std::cout << "up" << std::endl;
+			if (zombieY > playerY)
+			{
+				positionRect.y -= moveSpeed * delta;
+				//std::cout << "up" << std::endl;
+			}
+			else if (zombieY < playerY)
+			{
+				positionRect.y += moveSpeed * delta;
+				//std::cout << "down" << std::endl;
+			}
 		}
-		else if (zombieY < playerY)
+		else
 		{
-			positionRect.y += moveSpeed * delta;
-			std::cout << "down" << std::endl;
+			if (zombieX < player2X)
+			{
+				positionRect.x += moveSpeed * delta;
+			}
+			else if (zombieX > player2X)
+			{
+				positionRect.x -= moveSpeed * delta;
+			}
+
+			if (zombieY > player2Y)
+			{
+				positionRect.y -= moveSpeed * delta;
+			}
+			else if (zombieY < player2Y)
+			{
+				positionRect.y += moveSpeed * delta;
+			}
 		}
 	}
 
-	if (explosion && intersectsWith(b))
+	if ((b1.getExplosion() && intersectsWith(b1)) || (b2.getExplosion() && intersectsWith(b2)))
 	{
 		std::cout << "hit" << std::endl;
 		isAlive = false;

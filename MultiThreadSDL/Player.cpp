@@ -1,9 +1,11 @@
-#include "Player.h"
-#include "Zombie.h"
-
 #include <SDL_image.h>
 #include <iostream>
 #include <cmath>
+#include <SDL.h>
+
+
+#include "Player.h"
+#include "Zombie.h"
 
 Player::Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
@@ -110,6 +112,15 @@ void Player::Update(float delta, const Uint8* keyState)
 		frameCounter = 0;
 		cropRect.x = frameWidth;
 	}
+
+	/*
+	if (intersectsWithZombie(z))
+	{
+		positionRect.x = 1000;
+		positionRect.y = 1000;
+	}
+	*/
+	
 }
 
 void Player::Draw(SDL_Renderer* renderTarget)
@@ -118,7 +129,7 @@ void Player::Draw(SDL_Renderer* renderTarget)
 }
 
 /*
-bool Player::intersectsWith(Zombie& z)
+bool Player::intersectsWithZombie(Zombie& z)
 {
 	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= GetRadius() + z.GetRadius() )
 	{
@@ -127,6 +138,8 @@ bool Player::intersectsWith(Zombie& z)
 	return true;
 }
 */
+
+
 
 int Player::GetOriginX() { return positionRect.x + originX; }
 int Player::GetOriginY() { return positionRect.y + originY; }

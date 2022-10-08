@@ -3,7 +3,6 @@
 #include <SDL.h>
 #include <string>
 
-#include "Bomb.h"
 #include "Zombie.h"
 
 
@@ -28,7 +27,7 @@ public:
 
 	void Update(float delta, const Uint8* keyState);
 	void Draw(SDL_Renderer* renderTarget);  
-	//bool intersectsWith(Zombie& z);
+	//bool intersectsWithZombie(Zombie& z);
 
 	SDL_Rect positionRect;
 

@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
 	Player player2(renderTarget, "player2.png", 600, 400, 3, 4);
 
 	Bomb b(renderTarget, "bomb2.png", -200, 200, 3, 4);
+	Bomb b2(renderTarget, "bomb2.png", -200, 200, 3, 4);
 
 	Zombie z1(renderTarget, "zombie.png", rand() % 600 + 20, rand() % 400 + 20, 3, 4);
 	Zombie z2(renderTarget, "zombie.png", 200, 200, 3, 4);
@@ -85,7 +86,8 @@ int main(int argc, char* argv[])
 				case SDLK_SPACE:
 					b.toggleBomb(player1.GetOriginX(), player1.GetOriginY());
 					break;
-				case SDLK_r:
+				case SDLK_m:
+					b2.toggleBomb(player2.GetOriginX(), player2.GetOriginY());
 					break;
 				default:
 					break;
@@ -99,7 +101,8 @@ int main(int argc, char* argv[])
 		player1.Update(delta, keyState);
 		player2.Update(delta, keyState);
 		b.Update(delta);
-		zombie.Update(delta, zombie.GetOriginX(), zombie.GetOriginY(), player1.GetOriginX(), player1.GetOriginY(), b.getExplosion(), b);
+		b2.Update(delta);
+		zombie.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2);
 		
 		
 
@@ -123,6 +126,7 @@ int main(int argc, char* argv[])
 		player1.Draw(renderTarget);
 		player2.Draw(renderTarget);
 		b.Draw(renderTarget);
+		b2.Draw(renderTarget);
 		zombie.Draw(renderTarget);
 		
 		SDL_RenderPresent(renderTarget);
