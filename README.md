@@ -1,3 +1,1 @@
 # ZombieRunner
-
-pipi popo
