@@ -1,8 +1,6 @@
 #include "Bomb.h"
 
-#include <SDL_image.h>
-#include <iostream>
-#include <cmath>
+
 
 Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {

@@ -1,26 +1,27 @@
 #include "Zombie.h"
-#include "Player.h"
 
-#include <SDL_image.h>
-#include <iostream>
-#include <cmath>
-
-Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
+Zombie::Zombie()
 {
 	isAlive = true;
+}
+
+Zombie::~Zombie()
+{
+	SDL_DestroyTexture(texture);
+}
+
+void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
+{
+	int framesX = 3;
+	int framesY = 4;
+
+	int x = rand() % 250;
+	int y = rand() % 250;
+
 	frameCounter = 0;
 
-	SDL_Surface* surface = IMG_Load(filePath.c_str());
-	if (surface == NULL)
-		std::cout << "Error" << std::endl;
-	else
-	{
-		texture = SDL_CreateTextureFromSurface(renderTarget, surface);
-		if (texture == NULL)
-			std::cout << "Error" << std::endl;
-	}
-
-	SDL_FreeSurface(surface);
+	SDL_Texture* texture = nullptr;
+	texture = LoadTexture(filePath, renderTarget);
 
 	SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
 
@@ -41,17 +42,31 @@ Zombie::Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, i
 	radius = frameWidth / 2;
 
 	isActive = false;
-	moveSpeed = 25.0f;
+	moveSpeed = rand() % 25;
+
 }
 
-Zombie::~Zombie()
+SDL_Texture* Zombie::LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
 {
-	SDL_DestroyTexture(texture);
+	
+	SDL_Surface* surface = IMG_Load(filePath.c_str());
+	if (surface == NULL)
+		std::cout << "Error" << std::endl;
+	else
+	{
+		std::cout << "zombie text cor" << std::endl;
+		texture = SDL_CreateTextureFromSurface(renderTarget, surface);
+		if (texture == NULL)
+			std::cout << "Error" << std::endl;
+	}
+
+	SDL_FreeSurface(surface);
+
+	return texture;
 }
 
 void Zombie::Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b1, Bomb& b2)
 {
-
 	isActive = true;
 
 	int zombieX = this->GetOriginX();
@@ -68,6 +83,8 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 	float dist1 = sqrt(pow(abs(playerX - zombieX), 2) + pow(abs(playerY - zombieY), 2));
 	float dist2 = sqrt(pow(abs(player2X - zombieX), 2) + pow(abs(player2Y - zombieY), 2));
 
+	std::cout << "d1: " << dist1 << "; d2: " << dist2 << std::endl;
+
 	if (isAlive)
 	{
 		if (dist1 <= dist2)
@@ -75,23 +92,23 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 			if (zombieX < playerX)
 			{
 				positionRect.x += moveSpeed * delta;
-				//std::cout << "right" << std::endl;
+				std::cout << "right" << std::endl;
 			}
 			else if (zombieX > playerX)
 			{
 				positionRect.x -= moveSpeed * delta;
-				//std::cout << "left" << std::endl;
+				std::cout << "left" << std::endl;
 			}
 
 			if (zombieY > playerY)
 			{
 				positionRect.y -= moveSpeed * delta;
-				//std::cout << "up" << std::endl;
+				std::cout << "up" << std::endl;
 			}
 			else if (zombieY < playerY)
 			{
 				positionRect.y += moveSpeed * delta;
-				//std::cout << "down" << std::endl;
+				std::cout << "down" << std::endl;
 			}
 		}
 		else
@@ -118,13 +135,13 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 
 	if ((b1.getExplosion() && intersectsWith(b1)) || (b2.getExplosion() && intersectsWith(b2)))
 	{
+
 		std::cout << "hit" << std::endl;
+
 		isAlive = false;
-		positionRect.x = -200.0f;
-		positionRect.y = -200.0f;
 	}
 
-	if (isActive)
+	if (isActive && isAlive)
 	{
 		frameCounter += delta;
 

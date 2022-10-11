@@ -1,11 +1,4 @@
-#include <SDL_image.h>
-#include <iostream>
-#include <cmath>
-#include <SDL.h>
-
-
 #include "Player.h"
-#include "Zombie.h"
 
 Player::Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
@@ -69,7 +62,16 @@ Player::~Player()
 	SDL_DestroyTexture(texture);
 }
 
-void Player::Update(float delta, const Uint8* keyState)
+bool Player::intersectsWithZombie(Zombie& z)
+{
+	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= radius + z.GetRadius())
+	{
+		return false;
+	}
+	return true;
+}
+
+void Player::Update(float delta, const Uint8* keyState, Zombie& z)
 {
 	isActive = true;
 	if (keyState[keys[0]])
@@ -113,15 +115,16 @@ void Player::Update(float delta, const Uint8* keyState)
 		cropRect.x = frameWidth;
 	}
 
-	/*
+
 	if (intersectsWithZombie(z))
 	{
 		positionRect.x = 1000;
 		positionRect.y = 1000;
 	}
-	*/
-	
+
+
 }
+
 
 void Player::Draw(SDL_Renderer* renderTarget)
 {

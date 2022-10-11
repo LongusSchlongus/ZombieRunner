@@ -54,13 +54,14 @@ int main(int argc, char* argv[])
 	Bomb b(renderTarget, "bomb2.png", -200, 200, 3, 4);
 	Bomb b2(renderTarget, "bomb2.png", -200, 200, 3, 4);
 
-	Zombie z1(renderTarget, "zombie.png", rand() % 600 + 20, rand() % 400 + 20, 3, 4);
-	Zombie z2(renderTarget, "zombie.png", 200, 200, 3, 4);
-	std::vector<Zombie> vector_zombies;
+	Zombie zombie;
+	Zombie zombies[6];
 
-	Zombie zombie(renderTarget, "zombie.png", rand() % 600, rand() % 400, 3, 4);
-
-	//Zombie zombies[2] = { vector_zombies.at(0), vector_zombies.at(1) };
+	for (int i = 0; i < 5; i++)
+	{
+		zombies[i] = zombie;
+		zombies[i].SetTexture(renderTarget, "zombie2.png");
+	}
 
 	SDL_Texture* texture = LoadTexture("rect2.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
@@ -98,14 +99,21 @@ int main(int argc, char* argv[])
 		keyState = SDL_GetKeyboardState(NULL);
 
 		
-		player1.Update(delta, keyState);
-		player2.Update(delta, keyState);
+		player1.Update(delta, keyState, zombie);
+		player2.Update(delta, keyState, zombie);		// not testing colision with ´zombies but the default zombie
+
 		b.Update(delta);
 		b2.Update(delta);
-		zombie.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2);
-		
-		
 
+		//zombie.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2);
+
+		for (int i = 0; i < 5; i++)
+		{
+			zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2);
+		}
+
+		/*
+		
 		cameraRect.x = player1.GetOriginX() - 320;
 		cameraRect.y = player1.GetOriginY() - 240;
 
@@ -119,15 +127,24 @@ int main(int argc, char* argv[])
 		if (cameraRect.y + cameraRect.h >= levelHeight)
 			cameraRect.y = levelHeight - 480;
 		
+		*/
+		
 		// --------------------------------------------------- Drawing the cuurent image to the window
 		SDL_RenderClear(renderTarget);
 		SDL_RenderCopy(renderTarget, texture, &cameraRect, NULL);
 
 		player1.Draw(renderTarget);
 		player2.Draw(renderTarget);
+
 		b.Draw(renderTarget);
 		b2.Draw(renderTarget);
-		zombie.Draw(renderTarget);
+
+		//zombie.Draw(renderTarget);
+
+		for (int i = 0; i < 5; i++)
+		{
+			zombies[i].Draw(renderTarget);
+		}
 		
 		SDL_RenderPresent(renderTarget);
 	}

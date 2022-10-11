@@ -1,10 +1,13 @@
 #pragma once	
 
-#include <SDL.h>
-#include <string>
-
 #include "Zombie.h"
 
+#include <SDL.h>
+#include <SDL_image.h>
+
+#include <string>
+#include <iostream>
+#include <cmath>
 
 class Player
 {
@@ -25,9 +28,9 @@ public:
 	Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
 	~Player();
 
-	void Update(float delta, const Uint8* keyState);
+	bool intersectsWithZombie(Zombie& z);
+	void Update(float delta, const Uint8* keyState, Zombie& z);
 	void Draw(SDL_Renderer* renderTarget);  
-	//bool intersectsWithZombie(Zombie& z);
 
 	SDL_Rect positionRect;
 

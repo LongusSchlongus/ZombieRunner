@@ -1,10 +1,13 @@
 #pragma once
 
-#include <SDL.h>
-#include <string>
-
 #include "Bomb.h"
-#include "Player.h"
+
+#include <SDL.h>
+#include <SDL_image.h>
+
+#include <string>
+#include <iostream>
+#include <cmath>
 
 
 class Zombie
@@ -21,15 +24,32 @@ private:
 	int originX, originY;
 	int radius;
 	bool isAlive;
+
 public:
-	Zombie(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY);
+	//constructor
+	Zombie();
+
+	//copy-constructor
+	//Zombie(const Zombie& z);
+
+	//Assignment operator
+	//Zombie& operator= (const Zombie& other);
+
+	//destructor
 	~Zombie();
+
+	void SetTexture(SDL_Renderer* renderTarget, std::string filePath);
+
+	SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget);
 
 	void Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b, Bomb& b2);
 	void Draw(SDL_Renderer* renderTarget);
 	bool intersectsWith(Bomb& b);
 
 	SDL_FRect positionRect;
+
+	SDL_Renderer* renderer;
+	std::string filePath;
 
 	int GetOriginX();
 	int GetOriginY();
