@@ -42,7 +42,7 @@ public:
 
 	SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget);
 
-	void Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b, Bomb& b2);
+	void Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b, Bomb& b2, int* h);
 	void Draw(SDL_Renderer* renderTarget);
 	bool intersectsWith(Bomb& b);
 

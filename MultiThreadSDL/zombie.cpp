@@ -65,7 +65,7 @@ SDL_Texture* Zombie::LoadTexture(std::string filePath, SDL_Renderer* renderTarge
 	return texture;
 }
 
-void Zombie::Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b1, Bomb& b2)
+void Zombie::Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b1, Bomb& b2, int* h)
 {
 	isActive = true;
 
@@ -135,10 +135,8 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 
 	if ((b1.getExplosion() && intersectsWith(b1)) || (b2.getExplosion() && intersectsWith(b2)))
 	{
-
-		std::cout << "hit" << std::endl;
-
 		isAlive = false;
+		h++;
 	}
 
 	if (isActive && isAlive)

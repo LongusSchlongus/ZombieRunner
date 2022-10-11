@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	int currentTime = 0;
 	int prevTime = 0;
 	float delta = 0.0f;
-	const Uint8* keyState; 
+	const Uint8* keyState;
 	SDL_Rect cameraRect = { 0, 0, 640, 480 };
 	int levelWidth, levelHeight;
 	bool bomb = false;
@@ -63,13 +63,31 @@ int main(int argc, char* argv[])
 		zombies[i].SetTexture(renderTarget, "zombie2.png");
 	}
 
+	int highscore = 0;
+
 	SDL_Texture* texture = LoadTexture("rect2.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
-	
+
 	bool isRunning = true;
 	SDL_Event ev;
 
-	int i = 0;
+
+	/*												for highscore text
+	
+	TTF_Font* font = TTF_OpenFont("comic.ttf", 25);
+	SDL_Color color = { 144, 77, 255, 255 };
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, "highscore: ", color);
+	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);
+	SDL_Rect textRect;
+	textRect.x = textRect.y = 0;
+
+	SDL_QueryTexture(text, NULL, NULL, &textRect.w, &textRect.h);
+
+	SDL_FreeSurface(textSurface);
+	textSurface = nullptr;
+	
+	*/
+	
 
 	while (isRunning)
 	{
@@ -85,7 +103,7 @@ int main(int argc, char* argv[])
 				switch (ev.key.keysym.sym)
 				{
 				case SDLK_SPACE:
-					b.toggleBomb(player1.GetOriginX(), player1.GetOriginY());
+					b.toggleBomb(player1.GetOriginX() - 24, player1.GetOriginY() - 32);
 					break;
 				case SDLK_m:
 					b2.toggleBomb(player2.GetOriginX(), player2.GetOriginY());
@@ -105,14 +123,12 @@ int main(int argc, char* argv[])
 		b.Update(delta);
 		b2.Update(delta);
 
-		//zombie.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2);
-
 		for (int i = 0; i < 5; i++)
 		{
-			zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2);
+			zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
 		}
 
-		/*
+		/*	for camera movement
 		
 		cameraRect.x = player1.GetOriginX() - 320;
 		cameraRect.y = player1.GetOriginY() - 240;
@@ -132,14 +148,13 @@ int main(int argc, char* argv[])
 		// --------------------------------------------------- Drawing the cuurent image to the window
 		SDL_RenderClear(renderTarget);
 		SDL_RenderCopy(renderTarget, texture, &cameraRect, NULL);
+		//SDL_RenderCopy(renderTarget, text, NULL, &textRect);			//for highscore text
 
 		player1.Draw(renderTarget);
 		player2.Draw(renderTarget);
 
 		b.Draw(renderTarget);
 		b2.Draw(renderTarget);
-
-		//zombie.Draw(renderTarget);
 
 		for (int i = 0; i < 5; i++)
 		{
@@ -153,9 +168,12 @@ int main(int argc, char* argv[])
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderTarget);
 	SDL_DestroyTexture(texture);
+	//SDL_DestroyTexture(text);						for highscore text
+
 	window = nullptr;
 	renderTarget = nullptr;
 	texture = nullptr;
+	//text = nullptr;						for highscore text
 
 	IMG_Quit();
 	SDL_Quit();
