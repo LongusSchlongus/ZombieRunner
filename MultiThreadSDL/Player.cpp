@@ -65,7 +65,7 @@ Player::~Player()
 
 bool Player::intersectsWithZombie(Zombie& z)
 {
-	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= radius + z.GetRadius())
+	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= radius + z.GetRadius() && z.GetAlive())
 	{
 		return false;
 	}
@@ -124,30 +124,17 @@ void Player::Update(float delta, const Uint8* keyState, std::vector <Zombie>& zm
 	{
 		if (intersectsWithZombie(zmb[i]))
 		{
-			isAlive = false;
+			//isAlive = false;
+			std::cout << "player took damage" << std::endl;
 		}
 	}
 	
 }
 
-
 void Player::Draw(SDL_Renderer* renderTarget)
 {
 	SDL_RenderCopy(renderTarget, texture, &cropRect, &positionRect);
 }
-
-/*
-bool Player::intersectsWithZombie(Zombie& z)
-{
-	if (sqrt(pow(GetOriginX() - z.GetOriginX(), 2) + pow(GetOriginY() - z.GetOriginY(), 2)) >= GetRadius() + z.GetRadius() )
-	{
-		return false;
-	}
-	return true;
-}
-*/
-
-
 
 int Player::GetOriginX() { return positionRect.x + originX; }
 int Player::GetOriginY() { return positionRect.y + originY; }

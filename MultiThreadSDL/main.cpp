@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
 	std::vector <Zombie> zombies;
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 28; i++)
 	{
 		zombies.push_back(zombie);
 		zombies[size].SetTexture(renderTarget, "zombie.png");
@@ -108,11 +108,6 @@ int main(int argc, char* argv[])
 	while (isRunning)
 	{
 
-		zombies.push_back(zombie);
-		zombies[size].SetTexture(renderTarget, "zombie.png");
-		size++;
-		std::cout << "size: " << size << std::endl;
-
 
 		prevTime = currentTime;
 		currentTime = SDL_GetTicks();
@@ -126,12 +121,12 @@ int main(int argc, char* argv[])
 				switch (ev.key.keysym.sym)
 				{
 				case SDLK_SPACE:
-					if(player1.GetAlive())
+					if(player1.GetAlive() && !b.GetActive())
 						b.toggleBomb(player1.GetOriginX() - 24, player1.GetOriginY() - 32);
 					break;
 				case SDLK_m:
-					if (player2.GetAlive())
-						b2.toggleBomb(player2.GetOriginX(), player2.GetOriginY());
+					if (player2.GetAlive() && !b2.GetActive())
+						b2.toggleBomb(player2.GetOriginX() - 24, player2.GetOriginY() - 32);
 					break;
 				case SDLK_f:
 					zombies.push_back(zombie);

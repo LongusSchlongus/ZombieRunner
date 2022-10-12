@@ -51,5 +51,6 @@ public:
 	int GetOriginX();
 	int GetOriginY();
 	int GetRadius();
+	bool GetAlive();
 };
 

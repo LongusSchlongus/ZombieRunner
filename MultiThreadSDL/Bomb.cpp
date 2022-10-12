@@ -108,6 +108,11 @@ void Bomb::resetBomb()
 }
 bool Bomb::getExplosion() { return explosion; }
 
+bool Bomb::GetActive()
+{
+	return isActive;
+}
+
 
 
 

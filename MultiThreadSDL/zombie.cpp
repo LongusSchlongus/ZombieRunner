@@ -15,8 +15,8 @@ void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
 	int framesX = 3;
 	int framesY = 4;
 
-	int x = rand() % 250;
-	int y = rand() % 250;
+	int x = rand() % 600;
+	int y = rand() % 400;
 
 	frameCounter = 0;
 
@@ -182,3 +182,8 @@ bool Zombie::intersectsWith(Bomb& p)
 int Zombie::GetOriginX() { return positionRect.x + originX; }
 int Zombie::GetOriginY() { return positionRect.y + originY; }
 int Zombie::GetRadius() { return radius; }
+
+bool Zombie::GetAlive()
+{
+	return isAlive;
+}

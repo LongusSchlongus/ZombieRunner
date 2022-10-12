@@ -41,5 +41,6 @@ public:
 	void toggleBomb(int x, int y);
 	void resetBomb();
 	bool getExplosion();
+	bool GetActive();
 };
 
