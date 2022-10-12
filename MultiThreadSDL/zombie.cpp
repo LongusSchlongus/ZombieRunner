@@ -137,12 +137,14 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 	{
 		if (isAlive)
 		{
+			std::cout << "hit!" << std::endl;
+			*h += 200;
 			isAlive = false;
-			h++;
+			cropRect.y += frameHeight * 3;
 		}
 	}
 
-	if (isActive && isAlive)
+	if (isActive )
 	{
 		frameCounter += delta;
 
@@ -154,11 +156,18 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 				cropRect.x = 0;
 		}
 	}
-	else
+	else 
 	{
 		frameCounter = 0;
 		cropRect.x = frameWidth;
 	}
+
+	if (cropRect.y == frameHeight * 3 && cropRect.x == frameWidth * 2)
+	{
+		
+		SDL_DestroyTexture(texture);
+	}
+
 }
 
 void Zombie::Draw(SDL_Renderer* renderTarget)

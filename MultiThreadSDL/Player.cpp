@@ -122,7 +122,7 @@ void Player::Update(float delta, const Uint8* keyState, std::vector <Zombie>& zm
 
 	for (int i = 0; i< vecSize; i++)
 	{
-		if (intersectsWithZombie(zmb[i]))
+		if (intersectsWithZombie(zmb[i]) && zmb[i].GetAlive())
 		{
 			//isAlive = false;
 			std::cout << "player took damage" << std::endl;

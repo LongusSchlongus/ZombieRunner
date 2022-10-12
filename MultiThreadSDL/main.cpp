@@ -43,11 +43,15 @@ int main(int argc, char* argv[])
 	SDL_Rect cameraRect = { 0, 0, 640, 480 };
 	int levelWidth, levelHeight;
 	bool bomb = false;
-	int size = 0;
+	int size = 10;
+	int highscore = 0;
+	std::string score_text = "Highscore: " + std::to_string(highscore);
 
 	SDL_Init(SDL_INIT_VIDEO);
+	if (TTF_Init() < 0)
+		std::cout << "error!" << std::endl;
 
-	window = SDL_CreateWindow("title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Zombierunner", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
 	renderTarget = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	Player player1(renderTarget, "playerNew1.png", 20, 20, 3, 4);
@@ -59,46 +63,34 @@ int main(int argc, char* argv[])
 	Zombie zombie;
 	std::vector <Zombie> zombies;
 
-	for (int i = 0; i < 28; i++)
+	for (int i = 0; i < size; i++)
 	{
 		zombies.push_back(zombie);
-		zombies[size].SetTexture(renderTarget, "zombieNew2.png");
-		size++;
-		std::cout << "size: " << size << std::endl;
+		zombies[i].SetTexture(renderTarget, "zombieNew2.png");
 	}
-
-	
-
-	int highscore = 0;
 
 	SDL_Texture* texture = LoadTexture("rectNew.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
 
-	bool isRunning = true;
-	SDL_Event ev;
 
-
-	/*												for highscore text
-	
-	TTF_Font* font = TTF_OpenFont("comic.ttf", 25);
-	SDL_Color color = { 144, 77, 255, 255 };
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, "highscore: ", color);
+	TTF_Font* font = TTF_OpenFont("comicText.ttf", 25);
+	SDL_Color color = { 0, 0, 0, 255 };
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, score_text.c_str(), color);
 	SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);
 	SDL_Rect textRect;
-	textRect.x = textRect.y = 0;
+	textRect.x = textRect.y = 20;
 
 	SDL_QueryTexture(text, NULL, NULL, &textRect.w, &textRect.h);
 
 	SDL_FreeSurface(textSurface);
 	textSurface = nullptr;
-	
-	*/
-	
+
+
+	bool isRunning = true;
+	SDL_Event ev;
 
 	while (isRunning)
 	{
-
-
 		prevTime = currentTime;
 		currentTime = SDL_GetTicks();
 		delta = (currentTime - prevTime) / 1000.0f;
@@ -118,22 +110,26 @@ int main(int argc, char* argv[])
 					if (player2.GetAlive() && !b2.GetActive())
 						b2.toggleBomb(player2.GetOriginX() - 24, player2.GetOriginY() - 32);
 					break;
-				case SDLK_f:
-					zombies.push_back(zombie);
-					zombies[size].SetTexture(renderTarget, "zombieNew2.png");
-					size++;
-					std::cout<<"size: "<<size<<std::endl;
+				case SDLK_n:
+					// change background
+				case SDLK_b:
+					highscore += 200;
+					std::cout << score_text << std::endl;
 				default:
 					break;
 				}
 			}
 		}
 
-		keyState = SDL_GetKeyboardState(NULL);
+		//Highscore update i guess
+		score_text = "Highscore: " + std::to_string(highscore);
+		SDL_Surface* textSurface = TTF_RenderText_Solid(font, score_text.c_str(), color);
+		SDL_Texture* text = SDL_CreateTextureFromSurface(renderTarget, textSurface);
 
+		keyState = SDL_GetKeyboardState(NULL);
 		
 		player1.Update(delta, keyState, zombies, zombies.size());
-		player2.Update(delta, keyState, zombies, zombies.size());		// not testing colision with ´zombies but the default zombie
+		player2.Update(delta, keyState, zombies, zombies.size());
 
 		b.Update(delta);
 		b2.Update(delta);
@@ -163,7 +159,6 @@ int main(int argc, char* argv[])
 		// --------------------------------------------------- Drawing the cuurent image to the window
 		SDL_RenderClear(renderTarget);
 		SDL_RenderCopy(renderTarget, texture, &cameraRect, NULL);
-		//SDL_RenderCopy(renderTarget, text, NULL, &textRect);			//for highscore text
 
 		player1.Draw(renderTarget);
 		player2.Draw(renderTarget);
@@ -175,20 +170,22 @@ int main(int argc, char* argv[])
 		{
 			zombies[i].Draw(renderTarget);
 		}
-		
+		SDL_RenderCopy(renderTarget, text, NULL, &textRect);			//for highscore text
 		SDL_RenderPresent(renderTarget);
+
+
 	}
 
 	// --------------------------------------------------- Freeing the memory
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderTarget);
 	SDL_DestroyTexture(texture);
-	//SDL_DestroyTexture(text);						for highscore text
+	SDL_DestroyTexture(text);						//for highscore text
 
 	window = nullptr;
 	renderTarget = nullptr;
 	texture = nullptr;
-	//text = nullptr;						for highscore text
+	text = nullptr;						//for highscore text
 
 	IMG_Quit();
 	SDL_Quit();

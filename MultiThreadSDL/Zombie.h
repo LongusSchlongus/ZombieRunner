@@ -24,6 +24,7 @@ private:
 	int originX, originY;
 	int radius;
 	bool isAlive;
+	int counter;
 
 public:
 	//constructor
