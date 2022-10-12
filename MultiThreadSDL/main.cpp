@@ -51,22 +51,12 @@ int main(int argc, char* argv[])
 	renderTarget = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	Player player1(renderTarget, "playerNew1.png", 20, 20, 3, 4);
-	Player player2(renderTarget, "player2.png", 600, 400, 3, 4);
+	Player player2(renderTarget, "playerNew2.png", 600, 400, 3, 4);
 
 	Bomb b(renderTarget, "bombNew2.png", -200, 200, 3, 4);
 	Bomb b2(renderTarget, "bombNew2.png", -200, 200, 3, 4);
 
 	Zombie zombie;
-	/*
-	Zombie zombies[6];
-
-	for (int i = 0; i < 5; i++)
-	{
-		zombies[i] = zombie;
-		zombies[i].SetTexture(renderTarget, "zombie2.png");
-	}
-	*/
-
 	std::vector <Zombie> zombies;
 
 	for (int i = 0; i < 28; i++)
