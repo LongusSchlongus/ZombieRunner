@@ -50,11 +50,11 @@ int main(int argc, char* argv[])
 	window = SDL_CreateWindow("title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
 	renderTarget = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	Player player1(renderTarget, "player1.png", 20, 20, 3, 4);
+	Player player1(renderTarget, "playerNew1.png", 20, 20, 3, 4);
 	Player player2(renderTarget, "player2.png", 600, 400, 3, 4);
 
-	Bomb b(renderTarget, "bomb2.png", -200, 200, 3, 4);
-	Bomb b2(renderTarget, "bomb2.png", -200, 200, 3, 4);
+	Bomb b(renderTarget, "bombNew2.png", -200, 200, 3, 4);
+	Bomb b2(renderTarget, "bombNew2.png", -200, 200, 3, 4);
 
 	Zombie zombie;
 	/*
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < 28; i++)
 	{
 		zombies.push_back(zombie);
-		zombies[size].SetTexture(renderTarget, "zombie.png");
+		zombies[size].SetTexture(renderTarget, "zombieNew2.png");
 		size++;
 		std::cout << "size: " << size << std::endl;
 	}
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 
 	int highscore = 0;
 
-	SDL_Texture* texture = LoadTexture("rect3.png", renderTarget);
+	SDL_Texture* texture = LoadTexture("rectNew.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
 
 	bool isRunning = true;
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 					break;
 				case SDLK_f:
 					zombies.push_back(zombie);
-					zombies[size].SetTexture(renderTarget, "zombie.png");
+					zombies[size].SetTexture(renderTarget, "zombieNew2.png");
 					size++;
 					std::cout<<"size: "<<size<<std::endl;
 				default:

@@ -135,8 +135,11 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 
 	if ((b1.getExplosion() && intersectsWith(b1)) || (b2.getExplosion() && intersectsWith(b2)))
 	{
-		isAlive = false;
-		h++;
+		if (isAlive)
+		{
+			isAlive = false;
+			h++;
+		}
 	}
 
 	if (isActive && isAlive)
