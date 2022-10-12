@@ -83,7 +83,7 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 	float dist1 = sqrt(pow(abs(playerX - zombieX), 2) + pow(abs(playerY - zombieY), 2));
 	float dist2 = sqrt(pow(abs(player2X - zombieX), 2) + pow(abs(player2Y - zombieY), 2));
 
-	std::cout << "d1: " << dist1 << "; d2: " << dist2 << std::endl;
+	//std::cout << "d1: " << dist1 << "; d2: " << dist2 << std::endl;
 
 	if (isAlive)
 	{
@@ -92,23 +92,23 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 			if (zombieX < playerX)
 			{
 				positionRect.x += moveSpeed * delta;
-				std::cout << "right" << std::endl;
+				//std::cout << "right" << std::endl;
 			}
 			else if (zombieX > playerX)
 			{
 				positionRect.x -= moveSpeed * delta;
-				std::cout << "left" << std::endl;
+				//std::cout << "left" << std::endl;
 			}
 
 			if (zombieY > playerY)
 			{
 				positionRect.y -= moveSpeed * delta;
-				std::cout << "up" << std::endl;
+				//std::cout << "up" << std::endl;
 			}
 			else if (zombieY < playerY)
 			{
 				positionRect.y += moveSpeed * delta;
-				std::cout << "down" << std::endl;
+				//std::cout << "down" << std::endl;
 			}
 		}
 		else

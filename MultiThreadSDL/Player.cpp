@@ -35,6 +35,7 @@ Player::Player(SDL_Renderer* renderTarget, std::string filePath, int x, int y, i
 	radius = frameWidth / 2;
 
 	isActive = false;
+	isAlive = true;
 
 	static int playerNumber = 0;
 	playerNumber++;
@@ -71,33 +72,37 @@ bool Player::intersectsWithZombie(Zombie& z)
 	return true;
 }
 
-void Player::Update(float delta, const Uint8* keyState, Zombie& z)
+void Player::Update(float delta, const Uint8* keyState, std::vector <Zombie>& zmb, int vecSize)
 {
 	isActive = true;
-	if (keyState[keys[0]])
-	{
-		positionRect.y -= moveSpeed * delta;
-		cropRect.y = frameHeight * 3;
-	}
-	else if (keyState[keys[1]])
-	{
-		positionRect.y += moveSpeed * delta;
-		cropRect.y = 0;
-	}
-	else if (keyState[keys[2]])
-	{
-		positionRect.x -= moveSpeed * delta;
-		cropRect.y = frameHeight;
-	}
-	else if (keyState[keys[3]])
-	{
-		positionRect.x += moveSpeed * delta;
-		cropRect.y = frameHeight * 2;
-	}
-	else
-		isActive = false;
 
-	if (isActive)
+	if (isAlive)
+	{
+		if (keyState[keys[0]])
+		{
+			positionRect.y -= moveSpeed * delta;
+			cropRect.y = frameHeight * 3;
+		}
+		else if (keyState[keys[1]])
+		{
+			positionRect.y += moveSpeed * delta;
+			cropRect.y = 0;
+		}
+		else if (keyState[keys[2]])
+		{
+			positionRect.x -= moveSpeed * delta;
+			cropRect.y = frameHeight;
+		}
+		else if (keyState[keys[3]])
+		{
+			positionRect.x += moveSpeed * delta;
+			cropRect.y = frameHeight * 2;
+		}
+		else
+			isActive = false;
+	}
+	
+	if (isActive && isAlive)
 	{
 		frameCounter += delta;
 
@@ -115,14 +120,14 @@ void Player::Update(float delta, const Uint8* keyState, Zombie& z)
 		cropRect.x = frameWidth;
 	}
 
-
-	if (intersectsWithZombie(z))
+	for (int i = 0; i< vecSize; i++)
 	{
-		positionRect.x = 1000;
-		positionRect.y = 1000;
+		if (intersectsWithZombie(zmb[i]))
+		{
+			isAlive = false;
+		}
 	}
-
-
+	
 }
 
 
@@ -147,3 +152,8 @@ bool Player::intersectsWithZombie(Zombie& z)
 int Player::GetOriginX() { return positionRect.x + originX; }
 int Player::GetOriginY() { return positionRect.y + originY; }
 int Player::GetRadius() { return radius; }
+
+bool Player::GetAlive()
+{
+	return isAlive;
+}

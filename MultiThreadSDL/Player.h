@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 class Player
 {
@@ -19,7 +20,7 @@ private:
 	float frameCounter;
 	float frameWidth, frameHeight;
 	int textureWidth;
-	bool isActive;
+	bool isActive, isAlive;
 	SDL_Scancode keys[4];
 	int originX, originY;
 	int radius;
@@ -29,7 +30,7 @@ public:
 	~Player();
 
 	bool intersectsWithZombie(Zombie& z);
-	void Update(float delta, const Uint8* keyState, Zombie& z);
+	void Update(float delta, const Uint8* keyState, std::vector<Zombie>& z, int vecSiz);
 	void Draw(SDL_Renderer* renderTarget);  
 
 	SDL_Rect positionRect;
@@ -37,5 +38,6 @@ public:
 	int GetOriginX();
 	int GetOriginY();
 	int GetRadius();
+	bool GetAlive();
 };
 

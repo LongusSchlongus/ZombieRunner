@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "main.h"
 
 
 SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
@@ -42,6 +43,7 @@ int main(int argc, char* argv[])
 	SDL_Rect cameraRect = { 0, 0, 640, 480 };
 	int levelWidth, levelHeight;
 	bool bomb = false;
+	int size = 0;
 
 	SDL_Init(SDL_INIT_VIDEO);
 
@@ -55,6 +57,7 @@ int main(int argc, char* argv[])
 	Bomb b2(renderTarget, "bomb2.png", -200, 200, 3, 4);
 
 	Zombie zombie;
+	/*
 	Zombie zombies[6];
 
 	for (int i = 0; i < 5; i++)
@@ -62,10 +65,23 @@ int main(int argc, char* argv[])
 		zombies[i] = zombie;
 		zombies[i].SetTexture(renderTarget, "zombie2.png");
 	}
+	*/
+
+	std::vector <Zombie> zombies;
+
+	for (int i = 0; i < 15; i++)
+	{
+		zombies.push_back(zombie);
+		zombies[size].SetTexture(renderTarget, "zombie.png");
+		size++;
+		std::cout << "size: " << size << std::endl;
+	}
+
+	
 
 	int highscore = 0;
 
-	SDL_Texture* texture = LoadTexture("rect2.png", renderTarget);
+	SDL_Texture* texture = LoadTexture("rect3.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
 
 	bool isRunning = true;
@@ -91,6 +107,13 @@ int main(int argc, char* argv[])
 
 	while (isRunning)
 	{
+
+		zombies.push_back(zombie);
+		zombies[size].SetTexture(renderTarget, "zombie.png");
+		size++;
+		std::cout << "size: " << size << std::endl;
+
+
 		prevTime = currentTime;
 		currentTime = SDL_GetTicks();
 		delta = (currentTime - prevTime) / 1000.0f;
@@ -103,11 +126,18 @@ int main(int argc, char* argv[])
 				switch (ev.key.keysym.sym)
 				{
 				case SDLK_SPACE:
-					b.toggleBomb(player1.GetOriginX() - 24, player1.GetOriginY() - 32);
+					if(player1.GetAlive())
+						b.toggleBomb(player1.GetOriginX() - 24, player1.GetOriginY() - 32);
 					break;
 				case SDLK_m:
-					b2.toggleBomb(player2.GetOriginX(), player2.GetOriginY());
+					if (player2.GetAlive())
+						b2.toggleBomb(player2.GetOriginX(), player2.GetOriginY());
 					break;
+				case SDLK_f:
+					zombies.push_back(zombie);
+					zombies[size].SetTexture(renderTarget, "zombie.png");
+					size++;
+					std::cout<<"size: "<<size<<std::endl;
 				default:
 					break;
 				}
@@ -117,13 +147,13 @@ int main(int argc, char* argv[])
 		keyState = SDL_GetKeyboardState(NULL);
 
 		
-		player1.Update(delta, keyState, zombie);
-		player2.Update(delta, keyState, zombie);		// not testing colision with ´zombies but the default zombie
+		player1.Update(delta, keyState, zombies, zombies.size());
+		player2.Update(delta, keyState, zombies, zombies.size());		// not testing colision with ´zombies but the default zombie
 
 		b.Update(delta);
 		b2.Update(delta);
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < size; i++)
 		{
 			zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
 		}
@@ -156,7 +186,7 @@ int main(int argc, char* argv[])
 		b.Draw(renderTarget);
 		b2.Draw(renderTarget);
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < size; i++)
 		{
 			zombies[i].Draw(renderTarget);
 		}

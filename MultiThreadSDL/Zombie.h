@@ -48,9 +48,6 @@ public:
 
 	SDL_FRect positionRect;
 
-	SDL_Renderer* renderer;
-	std::string filePath;
-
 	int GetOriginX();
 	int GetOriginY();
 	int GetRadius();
