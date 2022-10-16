@@ -20,7 +20,7 @@ private:
 	float frameCounter;
 	float frameWidth, frameHeight;
 	int textureWidth;
-	bool isActive;
+	//bool isActive;
 	int originX, originY;
 	int radius;
 	bool isAlive;

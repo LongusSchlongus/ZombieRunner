@@ -47,7 +47,7 @@ void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
 
 	radius = frameWidth / 2;
 
-	isActive = false;
+	//isActive = false;
 	moveSpeed = rand() % 25;
 
 }
@@ -72,7 +72,7 @@ SDL_Texture* Zombie::LoadTexture(std::string filePath, SDL_Renderer* renderTarge
 
 void Zombie::Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b1, Bomb& b2, int* h)
 {
-	isActive = true;
+	//isActive = true;
 
 	int zombieX = this->GetOriginX();
 	int zombieY = this->GetOriginY();
@@ -149,10 +149,10 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 		}
 	}
 
-	if (isActive )
-	{
-		frameCounter += delta;
+	frameCounter += delta;
 
+	if (isAlive )
+	{
 		if (frameCounter >= 0.25f)
 		{
 			frameCounter = 0;
@@ -161,10 +161,14 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 				cropRect.x = 0;
 		}
 	}
-	else 
+	else if (!isAlive)
 	{
-		frameCounter = 0;
-		cropRect.x = frameWidth;
+		if (frameCounter >= 0.25f)
+		{
+			std::cout << "test" << std::endl;
+			frameCounter = 0;
+			cropRect.x += frameWidth;
+		}
 	}
 
 	if (cropRect.y == frameHeight * 3 && cropRect.x == frameWidth * 2)
