@@ -10,7 +10,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "main.h"
+
+#include <list>
 
 
 SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
@@ -39,11 +40,13 @@ int main(int argc, char* argv[])
 	int currentTime = 0;
 	int prevTime = 0;
 	float delta = 0.0f;
+	float waveDelta = 0.0f;
 	const Uint8* keyState;
 	SDL_Rect cameraRect = { 0, 0, 640, 480 };
 	int levelWidth, levelHeight;
 	bool bomb = false;
-	int size = 10;
+	int zombieNum, bigBoyNum;
+	zombieNum = bigBoyNum = 0;
 	int highscore = 0;
 	std::string score_text = "Highscore: " + std::to_string(highscore);
 
@@ -61,13 +64,12 @@ int main(int argc, char* argv[])
 	Bomb b2(renderTarget, "bombNew2.png", -200, 200, 3, 4);
 
 	Zombie zombie;
+	std::list <Zombie> zombies3;
+	std::vector <Zombie> *zombies2  = new std::vector<Zombie>;
 	std::vector <Zombie> zombies;
 
-	for (int i = 0; i < size; i++)
-	{
-		zombies.push_back(zombie);
-		zombies[i].SetTexture(renderTarget, "zombieNew2.png");
-	}
+	Zombie bigBoy;
+	std::vector <Zombie> bigBoys;
 
 	SDL_Texture* texture = LoadTexture("rectNew.png", renderTarget);
 	SDL_QueryTexture(texture, NULL, NULL, &levelWidth, &levelHeight);
@@ -91,6 +93,16 @@ int main(int argc, char* argv[])
 
 	while (isRunning)
 	{
+		if (!player1.GetAlive())
+		{
+			if (!player2.GetAlive())
+			{
+				isRunning = false;
+				std::cout << "Gmae Over." << std::endl;
+
+			}
+		}
+
 		prevTime = currentTime;
 		currentTime = SDL_GetTicks();
 		delta = (currentTime - prevTime) / 1000.0f;
@@ -106,15 +118,37 @@ int main(int argc, char* argv[])
 					if(player1.GetAlive() && !b.GetActive())
 						b.toggleBomb(player1.GetOriginX() - 24, player1.GetOriginY() - 32);
 					break;
+
 				case SDLK_m:
 					if (player2.GetAlive() && !b2.GetActive())
 						b2.toggleBomb(player2.GetOriginX() - 24, player2.GetOriginY() - 32);
 					break;
+
 				case SDLK_n:
 					// change background
+					break;
+
 				case SDLK_b:
 					highscore += 200;
 					std::cout << score_text << std::endl;
+					break;
+
+				case SDLK_v:
+					zombies.push_back(zombie);
+					zombies[zombieNum].SetPosition(rand() % 600, rand() % 400);
+					zombies[zombieNum].SetTexture(renderTarget, "zombieNew2.png");
+					zombieNum++;
+					std::cout << zombieNum << std::endl;
+					break;
+
+				case SDLK_c:
+					bigBoys.push_back(bigBoy);
+					bigBoys[bigBoyNum].SetPosition(rand() % 600, rand() % 400);
+					bigBoys[bigBoyNum].SetTexture(renderTarget, "bigboy.png");
+					bigBoyNum++;
+					std::cout << bigBoyNum << std::endl;
+					break;
+
 				default:
 					break;
 				}
@@ -134,9 +168,37 @@ int main(int argc, char* argv[])
 		b.Update(delta);
 		b2.Update(delta);
 
-		for (int i = 0; i < size; i++)
+		/*
+		
+		for (auto z : zombies) z.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+
+		for (auto b : bigBoys) b.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+
+		*/
+		
+		waveDelta += delta;
+
+		if (waveDelta >= 2.25f)
 		{
+			waveDelta = 0;
+
+			zombies.push_back(zombie);
+			zombies[zombieNum].SetPosition(rand() % 600, rand() % 400);
+			zombies[zombieNum].SetTexture(renderTarget, "zombieNew2.png");
+			zombieNum++;
+
+		}
+		
+		for (int i = 0; i < zombieNum; i++)
+		{
+			zombies[i].SetTexture(renderTarget, "zombieNew2.png");
 			zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+		}
+
+		for (int i = 0; i < bigBoyNum; i++)
+		{
+			bigBoys[i].SetTexture(renderTarget, "bigboy.png");
+			bigBoys[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
 		}
 
 		/*	for camera movement
@@ -166,11 +228,17 @@ int main(int argc, char* argv[])
 		b.Draw(renderTarget);
 		b2.Draw(renderTarget);
 
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < zombieNum; i++)
 		{
 			zombies[i].Draw(renderTarget);
 		}
-		SDL_RenderCopy(renderTarget, text, NULL, &textRect);			//for highscore text
+
+		for (int i = 0; i < bigBoyNum; i++)
+		{
+			bigBoys[i].Draw(renderTarget);
+		}
+
+		SDL_RenderCopy(renderTarget, text, NULL, &textRect);		
 		SDL_RenderPresent(renderTarget);
 
 
@@ -180,12 +248,12 @@ int main(int argc, char* argv[])
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderTarget);
 	SDL_DestroyTexture(texture);
-	SDL_DestroyTexture(text);						//for highscore text
+	SDL_DestroyTexture(text);						
 
 	window = nullptr;
 	renderTarget = nullptr;
 	texture = nullptr;
-	text = nullptr;						//for highscore text
+	text = nullptr;					
 
 	IMG_Quit();
 	SDL_Quit();

@@ -25,6 +25,7 @@ private:
 	int radius;
 	bool isAlive;
 	int counter;
+	int x, y;
 
 public:
 	//constructor
@@ -39,6 +40,7 @@ public:
 	//destructor
 	~Zombie();
 
+	void SetPosition(int x, int y);
 	void SetTexture(SDL_Renderer* renderTarget, std::string filePath);
 
 	SDL_Texture* LoadTexture(std::string filePath, SDL_Renderer* renderTarget);

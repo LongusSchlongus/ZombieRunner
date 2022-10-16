@@ -3,6 +3,7 @@
 Zombie::Zombie()
 {
 	isAlive = true;
+	x = y = 0;
 }
 
 Zombie::~Zombie()
@@ -10,13 +11,21 @@ Zombie::~Zombie()
 	SDL_DestroyTexture(texture);
 }
 
+void Zombie::SetPosition(int x, int y)
+{
+
+	this->x = rand() % 600;
+	this->y = rand() % 400;
+
+	positionRect.x = x;
+	positionRect.y = y;
+
+}
+
 void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
 {
 	int framesX = 3;
 	int framesY = 4;
-
-	int x = rand() % 600;
-	int y = rand() % 400;
 
 	frameCounter = 0;
 
@@ -24,9 +33,6 @@ void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
 	texture = LoadTexture(filePath, renderTarget);
 
 	SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
-
-	positionRect.x = x;
-	positionRect.y = y;
 
 	textureWidth = cropRect.w;
 
@@ -54,7 +60,6 @@ SDL_Texture* Zombie::LoadTexture(std::string filePath, SDL_Renderer* renderTarge
 		std::cout << "Error" << std::endl;
 	else
 	{
-		std::cout << "zombie text cor" << std::endl;
 		texture = SDL_CreateTextureFromSurface(renderTarget, surface);
 		if (texture == NULL)
 			std::cout << "Error" << std::endl;
