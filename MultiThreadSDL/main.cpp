@@ -57,8 +57,8 @@ int main(int argc, char* argv[])
 	window = SDL_CreateWindow("Zombierunner", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
 	renderTarget = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	Player player1(renderTarget, "playerNew1.png", 20, 20, 3, 4);
-	Player player2(renderTarget, "playerNew2.png", 600, 400, 3, 4);
+	Player player1(renderTarget, "playerNew1.png", 350, 250, 3, 4);
+	Player player2(renderTarget, "playerNew2.png", 250, 150, 3, 4);
 
 	Bomb b(renderTarget, "bombNew2.png", -200, 200, 3, 4);
 	Bomb b2(renderTarget, "bombNew2.png", -200, 200, 3, 4);
@@ -97,9 +97,7 @@ int main(int argc, char* argv[])
 		{
 			if (!player2.GetAlive())
 			{
-				isRunning = false;
-				std::cout << "Gmae Over." << std::endl;
-
+				while (1) { std::cout << "Gmae Over." << std::endl; }
 			}
 		}
 
@@ -167,14 +165,6 @@ int main(int argc, char* argv[])
 
 		b.Update(delta);
 		b2.Update(delta);
-
-		/*
-		
-		for (auto z : zombies) z.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
-
-		for (auto b : bigBoys) b.Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
-
-		*/
 		
 		waveDelta += delta;
 
@@ -191,14 +181,20 @@ int main(int argc, char* argv[])
 		
 		for (int i = 0; i < zombieNum; i++)
 		{
-			zombies[i].SetTexture(renderTarget, "zombieNew2.png");
-			zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+			if (zombies[i].GetAlive())
+			{
+				zombies[i].SetTexture(renderTarget, "zombieNew2.png");
+				zombies[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+			}
 		}
 
 		for (int i = 0; i < bigBoyNum; i++)
 		{
-			bigBoys[i].SetTexture(renderTarget, "bigboy.png");
-			bigBoys[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+			if (zombies[i].GetAlive())
+			{
+				bigBoys[i].SetTexture(renderTarget, "bigboy.png");
+				bigBoys[i].Update(delta, player1.GetOriginX(), player1.GetOriginY(), player2.GetOriginX(), player2.GetOriginY(), b, b2, &highscore);
+			}
 		}
 
 		/*	for camera movement

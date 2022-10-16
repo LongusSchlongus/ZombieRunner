@@ -3,7 +3,7 @@
 Zombie::Zombie()
 {
 	isAlive = true;
-	x = y = 0;
+	frameCounter = 0;
 }
 
 Zombie::~Zombie()
@@ -13,21 +13,14 @@ Zombie::~Zombie()
 
 void Zombie::SetPosition(int x, int y)
 {
-
-	this->x = rand() % 600;
-	this->y = rand() % 400;
-
-	positionRect.x = x;
-	positionRect.y = y;
-
+	positionRect.x = rand() % 600;
+	positionRect.y = rand() % 400;
 }
 
 void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
 {
 	int framesX = 3;
 	int framesY = 4;
-
-	frameCounter = 0;
 
 	SDL_Texture* texture = nullptr;
 	texture = LoadTexture(filePath, renderTarget);
@@ -47,14 +40,11 @@ void Zombie::SetTexture(SDL_Renderer* renderTarget, std::string filePath)
 
 	radius = frameWidth / 2;
 
-	//isActive = false;
 	moveSpeed = rand() % 25;
-
 }
 
 SDL_Texture* Zombie::LoadTexture(std::string filePath, SDL_Renderer* renderTarget)
 {
-	
 	SDL_Surface* surface = IMG_Load(filePath.c_str());
 	if (surface == NULL)
 		std::cout << "Error" << std::endl;
@@ -64,77 +54,60 @@ SDL_Texture* Zombie::LoadTexture(std::string filePath, SDL_Renderer* renderTarge
 		if (texture == NULL)
 			std::cout << "Error" << std::endl;
 	}
-
 	SDL_FreeSurface(surface);
-
 	return texture;
 }
 
 void Zombie::Update(float delta, int playerX, int playerY, int player2X, int player2Y, Bomb& b1, Bomb& b2, int* h)
 {
-	//isActive = true;
+	frameCounter += delta;
 
 	int zombieX = this->GetOriginX();
 	int zombieY = this->GetOriginY();
-
-	//c^2 = a^2 + b^2
-	//c = sqrt(pow(a,2) + pow(b,2))
-
-	//kat1 = abs(x2 - x1)
-	//kat2 = abs(y2 - y1)
-
-	// => dist1 = sqrt(pow( abs(x2 - x1) ,2) + pow( abs(y2 - y1) ,2))
 	
 	float dist1 = sqrt(pow(abs(playerX - zombieX), 2) + pow(abs(playerY - zombieY), 2));
 	float dist2 = sqrt(pow(abs(player2X - zombieX), 2) + pow(abs(player2Y - zombieY), 2));
 
-	//std::cout << "d1: " << dist1 << "; d2: " << dist2 << std::endl;
+	if (frameCounter >= 0.25f)
+	{
+		frameCounter = 0;
+		cropRect.x += frameWidth;
+
+		if (cropRect.x >= textureWidth)
+			cropRect.x = 0;
+	}
 
 	if (isAlive)
 	{
 		if (dist1 <= dist2)
 		{
 			if (zombieX < playerX)
-			{
 				positionRect.x += moveSpeed * delta;
-				//std::cout << "right" << std::endl;
-			}
+
 			else if (zombieX > playerX)
-			{
 				positionRect.x -= moveSpeed * delta;
-				//std::cout << "left" << std::endl;
-			}
+
 
 			if (zombieY > playerY)
-			{
 				positionRect.y -= moveSpeed * delta;
-				//std::cout << "up" << std::endl;
-			}
+
 			else if (zombieY < playerY)
-			{
 				positionRect.y += moveSpeed * delta;
-				//std::cout << "down" << std::endl;
-			}
 		}
 		else
 		{
 			if (zombieX < player2X)
-			{
 				positionRect.x += moveSpeed * delta;
-			}
+			
 			else if (zombieX > player2X)
-			{
 				positionRect.x -= moveSpeed * delta;
-			}
+			
 
 			if (zombieY > player2Y)
-			{
 				positionRect.y -= moveSpeed * delta;
-			}
+			
 			else if (zombieY < player2Y)
-			{
 				positionRect.y += moveSpeed * delta;
-			}
 		}
 	}
 
@@ -142,38 +115,17 @@ void Zombie::Update(float delta, int playerX, int playerY, int player2X, int pla
 	{
 		if (isAlive)
 		{
+			isAlive = false;
 			std::cout << "hit!" << std::endl;
 			*h += 200;
-			isAlive = false;
 			cropRect.y += frameHeight * 3;
 		}
 	}
 
-	frameCounter += delta;
-
-	if (isAlive )
-	{
-		if (frameCounter >= 0.25f)
-		{
-			frameCounter = 0;
-			cropRect.x += frameWidth;
-			if (cropRect.x >= textureWidth)
-				cropRect.x = 0;
-		}
-	}
-	else if (!isAlive)
-	{
-		if (frameCounter >= 0.25f)
-		{
-			std::cout << "test" << std::endl;
-			frameCounter = 0;
-			cropRect.x += frameWidth;
-		}
-	}
+	std::cout << cropRect.y << " == " << frameHeight * 3 << " && " << cropRect.x << " == " << frameWidth * 2 << std::endl;
 
 	if (cropRect.y == frameHeight * 3 && cropRect.x == frameWidth * 2)
 	{
-		
 		SDL_DestroyTexture(texture);
 	}
 

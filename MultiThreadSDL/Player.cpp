@@ -139,7 +139,4 @@ int Player::GetOriginX() { return positionRect.x + originX; }
 int Player::GetOriginY() { return positionRect.y + originY; }
 int Player::GetRadius() { return radius; }
 
-bool Player::GetAlive()
-{
-	return isAlive;
-}
+bool Player::GetAlive() { return isAlive; }

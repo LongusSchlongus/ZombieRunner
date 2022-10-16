@@ -1,7 +1,5 @@
 #include "Bomb.h"
 
-
-
 Bomb::Bomb(SDL_Renderer* renderTarget, std::string filePath, int x, int y, int framesX, int framesY)
 {
 	explosion = false;
@@ -86,7 +84,6 @@ void Bomb::Draw(SDL_Renderer* renderTarget)
 	SDL_RenderCopy(renderTarget, texture, &cropRect, &positionRect);
 }
 
-
 int Bomb::GetOriginX() { return positionRect.x + originX; }
 
 int Bomb::GetOriginY() { return positionRect.y + originY; }
@@ -101,18 +98,11 @@ void Bomb::toggleBomb(int x, int y)
 }
 void Bomb::resetBomb()
 {
+	isActive = false;
 	positionRect.x = -200;
 	positionRect.y = 200;
-	isActive = false;
 	periodCounter = 0;
 }
 bool Bomb::getExplosion() { return explosion; }
 
-bool Bomb::GetActive()
-{
-	return isActive	;
-}
-
-
-
-
+bool Bomb::GetActive() { return isActive; }

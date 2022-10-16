@@ -20,12 +20,9 @@ private:
 	float frameCounter;
 	float frameWidth, frameHeight;
 	int textureWidth;
-	//bool isActive;
 	int originX, originY;
 	int radius;
 	bool isAlive;
-	int counter;
-	int x, y;
 
 public:
 	//constructor
